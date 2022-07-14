@@ -3,6 +3,6 @@
 
 void *malloc(size_t size)
 {
-    printf('Our malloc');
+    printf("Our malloc");
     return NULL;
 }
