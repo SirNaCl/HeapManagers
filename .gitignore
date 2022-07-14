@@ -7,3 +7,13 @@ Makefile
 config.*
 stamp-h1
 .DS_Store
+array.o
+awkgram.o
+builtin.o
+dfa.o
+ext.o
+field.o
+floatcomp.o
+gawkmisc.o
+getopt.o
+getopt1.o
