@@ -3,7 +3,6 @@ awklib/
 doc/
 gawk-3.1.8/
 po/
-Makefile
 config.*
 stamp-h1
 .DS_Store
