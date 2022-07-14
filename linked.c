@@ -1,8 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 
 void *malloc(size_t size)
 {
-    write(0, "Malloc", sizeof "Malloc");
+    write(STDOUT_FILENO, "Malloc", sizeof "Malloc");
     return NULL;
 }
