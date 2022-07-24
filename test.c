@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <string.h>
+#include "linked.c"
 //#include <stdlib.h>
 
 int main()
