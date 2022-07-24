@@ -16,6 +16,8 @@ struct block_head_t
 
 #define HEADSIZE (NORMALIZE(sizeof(block_head_t)))
 
+block_head_t *root = NULL;
+
 // Increase the heap with given size and return block header
 // last_free = last free head in linked list
 block_head_t *grow_heap(block_head_t *last_free, size_t size)
@@ -42,7 +44,40 @@ block_head_t *grow_heap(block_head_t *last_free, size_t size)
     return new_head;
 }
 
-block_head_t find_free() {}
+block_head_t *claim_and_split(block_head_t *block, size_t size)
+{
+    if (block->size - HEADSIZE - size >= MINSIZE)
+    {
+        // Split excess into new block if worthwhile
+        block_head_t *nb = block + NORMALIZE(size);
+        nb->next = block->next;
+        nb->free = 1;
+        nb->size = NORMALIZE(block->size - HEADSIZE - size);
+        block->next = nb;
+        block->size = size;
+    }
+
+    return block;
+}
+
+block_head_t *find_free(size_t size)
+{
+    block_head_t *block = root;
+    while (block)
+    {
+        if (block->free && size <= block->size)
+        {
+            return claim_and_split(block, size);
+        }
+
+        if (block->next == NULL)
+            break;
+
+        block = block->next;
+    }
+
+    return grow_heap(block, size);
+}
 
 // Allocate a block of size "size" to the heap
 void *malloc(size_t size)
@@ -51,4 +86,17 @@ void *malloc(size_t size)
     {
         return NULL;
     }
+
+    if (root == NULL)
+    {
+        if ((root = grow_heap(NULL, size)) != NULL)
+            return (root + 1);
+        return NULL;
+    }
+
+    block_head_t *f = find_free(size);
+    if (f)
+        return (f + 1);
+
+    return NULL;
 }
