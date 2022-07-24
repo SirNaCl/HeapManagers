@@ -161,10 +161,11 @@ void *realloc(void *ptr, size_t size)
 
 void *calloc(size_t nbr, size_t size)
 {
+    /*
     size_t tot_size = nbr * size;
     void *ptr = malloc(tot_size);
     if (ptr == NULL)
         return NULL;
     memset(ptr, 0, tot_size);
-    return ptr;
+    return ptr;*/
 }
