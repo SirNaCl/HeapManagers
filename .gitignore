@@ -21,4 +21,4 @@ test.out
 .gitignore
 .vscode/dryrun.log
 .vscode/targets.log
-./vscode/*
+.vscode/*
