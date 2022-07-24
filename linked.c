@@ -90,7 +90,10 @@ void *malloc(size_t size)
     if (root == NULL)
     {
         if ((root = grow_heap(NULL, size)) != NULL)
+        {
+            printf("Returning %u", root);
             return (root + 1);
+        }
         return NULL;
     }
 
