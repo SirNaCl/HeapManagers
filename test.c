@@ -8,12 +8,12 @@ int main()
     char *str;
 
     /* Initial memory allocation */
-    str = (char *)malloc(12);
+    str = (char *)malloc(13);
     strcpy(str, "mallocstring");
     assert(strcmp(str, "mallocstring") == 0);
 
     /* Reallocating memory */
-    str = (char *)realloc(str, 15);
+    str = (char *)realloc(str, 16);
     strcat(str, "new");
     assert(strcmp(str, "mallocstringnew") == 0);
 
