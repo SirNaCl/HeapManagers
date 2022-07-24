@@ -6,6 +6,7 @@
 // Normalize the data size to a minimum allocation size
 #define NORMALIZE(size) (size + (MINSIZE - size % MINSIZE))
 typedef struct block_head_t block_head_t;
+
 struct block_head_t
 {
     int free : 1;
