@@ -104,6 +104,22 @@ void *malloc(size_t size)
     return NULL;
 }
 
+void consolidate_blocks()
+{
+    block_head_t *block = root;
+    while (block && block->next)
+    {
+        if (block->free && block->next->free)
+        {
+            block->size += block->next->size + HEADSIZE;
+            block->next = block->next->next;
+            continue; // If we consolidated, we don't have to jump to next block
+        }
+
+        block = block->next;
+    }
+}
+
 void free(void *ptr)
 {
     if (!ptr)
@@ -111,4 +127,5 @@ void free(void *ptr)
     block_head_t *block = ((block_head_t *)ptr) - 1;
     assert(block->free == 0);
     block->free = 1;
+    consolidate_blocks();
 }
