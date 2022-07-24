@@ -16,3 +16,4 @@ floatcomp.o
 gawkmisc.o
 getopt.o
 getopt1.o
+test.out
