@@ -103,3 +103,12 @@ void *malloc(size_t size)
 
     return NULL;
 }
+
+void free(void *ptr)
+{
+    if (!ptr)
+        return;
+    block_head_t *block = ((block_head_t *)ptr) - 1;
+    assert(block->free == 0);
+    block->free = 1;
+}
