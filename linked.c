@@ -26,7 +26,7 @@ block_head_t *grow_heap(block_head_t *last_free, size_t size)
     void *block_end = sbrk(NORMALIZE(size + HEADSIZE));
 
     // return NULL if allocation failed
-    if (block_end != (void *)0)
+    if (block_end == (void *)0)
     {
         return NULL;
     }
