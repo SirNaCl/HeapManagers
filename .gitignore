@@ -17,3 +17,7 @@ gawkmisc.o
 getopt.o
 getopt1.o
 test.out
+.vscode/configurationCache.log
+.gitignore
+.vscode/dryrun.log
+.vscode/targets.log
