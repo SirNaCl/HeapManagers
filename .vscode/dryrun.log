@@ -1,9 +1,12 @@
+make --dry-run --keep-going --print-directory
 make: Entering directory `/Users/emil/Documents/skola/OS/HeapManagers'
 rm -f gawk-3.1.8/our_alloc.c
 ln ./buddy.c gawk-3.1.8/our_alloc.c
-cd gawk-3.1.8/ && /Library/Developer/CommandLineTools/usr/bin/make check
-make: Leaving directory `/Users/emil/Documents/skola/OS/HeapManagers'
+cd gawk-3.1.8/ && /Library/Developer/CommandLineTools/usr/bin/make clean check
  
 /bin/sh: line 0: cd: gawk-3.1.8/: No such file or directory
+
 make: *** [buddy] Error 1
 
+make: Leaving directory `/Users/emil/Documents/skola/OS/HeapManagers'
+ 
