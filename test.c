@@ -14,6 +14,7 @@ int main()
     str2 = (char *)malloc(13);
     strcpy(str, "mallocstring");
     assert(strcmp(str, "mallocstring") == 0);
+    printf("Malloced string: %s\n", str);
     printf("Malloc tests PASSED \n");
     /* Reallocating memory */
 

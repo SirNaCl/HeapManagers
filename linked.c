@@ -73,7 +73,7 @@ block_head_t *find_free(size_t size)
             return claim_and_split(block, size);
         }
 
-        if (block->next == NULL)
+        if (!block->next)
             break;
 
         block = block->next;
@@ -105,9 +105,9 @@ void *malloc(size_t size)
         return NULL;
     }
 
-    if (root == NULL)
+    if (!root)
     {
-        if ((root = grow_heap(NULL, size)) != NULL)
+        if ((root = grow_heap(NULL, size)))
         {
             return (root + 1);
         }
