@@ -58,8 +58,6 @@ void split(block_head_t *block, size_t size)
         block->next = nb;
         block->size = size;
     }
-
-    return block;
 }
 
 block_head_t *find_free(size_t size)
