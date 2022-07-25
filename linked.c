@@ -48,7 +48,7 @@ block_head_t *grow_heap(block_head_t *last_free, size_t size)
 
 void split(block_head_t *block, size_t size)
 {
-    if (block->size - HEADSIZE - size >= MINSIZE)
+    if (block->size - size > HEADSIZE)
     {
         // Split excess into new block if worthwhile
         block_head_t *nb = (block_head_t *)(((void *)block) + HEADSIZE + size);
