@@ -101,31 +101,30 @@ void consolidate_blocks()
 void *malloc(size_t size)
 {
     if (size <= 0)
-    {
         return NULL;
-    }
 
     if (!root)
     {
-        if ((root = grow_heap(NULL, size)))
-        {
-            return (root + 1);
-        }
-        return NULL;
+        block_head_t *block = grow_heap(NULL, size);
+        if (!block)
+            return NULL;
+
+        root = block;
+        return (block + 1);
     }
 
     block_head_t *f = find_free(size);
-    if (f)
-        return (f + 1);
+    if (!f)
+        return NULL;
 
-    return NULL;
+    return (f + 1);
 }
 
 void free(void *ptr)
 {
     if (!ptr)
         return;
-    block_head_t *block = ((block_head_t *)ptr) - 1;
+    block_head_t *block = (block_head_t *)ptr - 1;
     assert(block->free == 0);
     block->free = 1;
     consolidate_blocks();
