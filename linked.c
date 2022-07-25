@@ -137,7 +137,7 @@ void *realloc(void *ptr, size_t size)
     if (!ptr)
         return malloc(size);
 
-    block_head_t *block = ((block_head_t *)ptr) - 1;
+    block_head_t *block = (block_head_t *)ptr - 1;
     assert(block->free == 0);
 
     // No changes if size is the same
