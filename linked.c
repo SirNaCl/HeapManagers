@@ -1,5 +1,7 @@
 #include <stdlib.h>
 #include <unistd.h>
+#include <assert.h>
+#include <string.h>
 
 #define MINSIZE 8
 
