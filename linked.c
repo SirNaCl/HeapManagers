@@ -141,8 +141,8 @@ void *realloc(void *ptr, size_t size)
     assert(block->free == 0);
 
     // No changes if size is the same
-    if (size == block->size)
-        return (block + 1);
+    if (normalize(size) == block->size)
+        return ptr;
 
     // Reduce size
     if (size < block->size)
@@ -150,14 +150,14 @@ void *realloc(void *ptr, size_t size)
 
     // Find new block if increasing size
     // TODO: Check if block can expand
-    block_head_t *nb = find_free(size);
+    void *nb = malloc(size);
     if (!nb)
         return NULL;
 
     // Move content to new block
-    memcpy((nb + 1), ptr, block->size);
+    memcpy(nb, ptr, block->size);
     free(ptr);
-    return (nb + 1);
+    return nb;
 }
 
 void *calloc(size_t nbr, size_t size)
