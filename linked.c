@@ -46,14 +46,12 @@ block_head_t *grow_heap(block_head_t *last_free, size_t size)
     return new_head;
 }
 
-block_head_t *claim_and_split(block_head_t *block, size_t size)
+void split(block_head_t *block, size_t size)
 {
-    block->free = 0;
-
     if (block->size - HEADSIZE - size >= MINSIZE)
     {
         // Split excess into new block if worthwhile
-        block_head_t *nb = block + size;
+        block_head_t *nb = (block_head_t *)((void *)block + HEADSIZE + size);
         nb->next = block->next;
         nb->free = 1;
         nb->size = block->size - HEADSIZE - size;
@@ -72,8 +70,8 @@ block_head_t *find_free(size_t size)
         if (block->free && size <= block->size)
         {
             block->free = 0;
+            split(block, size);
             return block;
-            // return claim_and_split(block, size);
         }
 
         if (!block->next)
