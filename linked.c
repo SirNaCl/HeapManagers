@@ -141,7 +141,7 @@ void *realloc(void *ptr, size_t size)
     assert(block->free == 0);
 
     // No changes if size is the same
-    if (normalize(size) == block->size)
+    if (NORMALIZE(size) == block->size)
         return ptr;
 
     // Reduce size
