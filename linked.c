@@ -128,7 +128,7 @@ void free(void *ptr)
     block_head_t *block = (block_head_t *)ptr - 1;
     assert(block->free == 0);
     block->free = 1;
-    consolidate_blocks();
+    // consolidate_blocks();
 }
 
 void *realloc(void *ptr, size_t size)
