@@ -8,14 +8,14 @@ int main()
 
     /* Initial memory allocation */
     printf("Running malloc tests\n");
+    str2 = (char *)malloc(20);
+    free(str2);
     str = (char *)malloc(13);
-    str2 = (char *)malloc(13);
     strcpy(str, "mallocstring");
     assert(strcmp(str, "mallocstring") == 0);
     printf("Malloced string: %s\n", str);
     printf("Malloc tests PASSED \n");
     /* Reallocating memory */
-    free(str2);
 
     printf("Running realloc tests\n");
     str = (char *)realloc(str, 16);
