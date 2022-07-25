@@ -10,5 +10,5 @@ linked:
 
 test: 
 	@git pull
-	@gcc -g -o ./test.out test.c 
+	@gcc -g -o ./test.out test.c linked.c
 	./test.out

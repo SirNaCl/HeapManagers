@@ -25,7 +25,7 @@ block_head_t *root = NULL;
 block_head_t *grow_heap(block_head_t *last_free, size_t size)
 {
     block_head_t *new_head = sbrk(0); /*Assign new head's address att current heap break*/
-    void *block_end = sbrk(NORMALIZE(size + HEADSIZE));
+    void *block_end = sbrk(NORMALIZE(size) + HEADSIZE);
 
     // return NULL if allocation failed
     if (block_end == (void *)-1)
@@ -49,7 +49,7 @@ block_head_t *grow_heap(block_head_t *last_free, size_t size)
 block_head_t *claim_and_split(block_head_t *block, size_t size)
 {
     block->free = 0;
-    /*
+
     if (block->size - HEADSIZE - size >= MINSIZE)
     {
         // Split excess into new block if worthwhile
@@ -59,7 +59,7 @@ block_head_t *claim_and_split(block_head_t *block, size_t size)
         nb->size = NORMALIZE(block->size - HEADSIZE - size);
         block->next = nb;
         block->size = size;
-    }*/
+    }
 
     return block;
 }
@@ -103,20 +103,12 @@ void *malloc(size_t size)
 {
     if (size <= 0)
         return NULL;
-
-    if (!root)
-    {
-        block_head_t *block = grow_heap(NULL, size);
-        if (!block)
-            return NULL;
-
-        root = block;
-        return (block + 1);
-    }
-
     block_head_t *f = find_free(size);
+
     if (!f)
         return NULL;
+    if (!root)
+        root = f;
 
     return (f + 1);
 }
@@ -133,7 +125,7 @@ void free(void *ptr)
 
 void *realloc(void *ptr, size_t size)
 {
-    // Return null if invalid pionter or size
+    // Return new block if NULL pointer
     if (!ptr)
         return malloc(size);
 
