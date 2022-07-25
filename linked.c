@@ -51,7 +51,7 @@ void split(block_head_t *block, size_t size)
     if (block->size - HEADSIZE - size >= MINSIZE)
     {
         // Split excess into new block if worthwhile
-        block_head_t *nb = (block_head_t *)((void *)block + HEADSIZE + size);
+        block_head_t *nb = (block_head_t *)(((void *)block) + HEADSIZE + size);
         nb->next = block->next;
         nb->free = 1;
         nb->size = block->size - HEADSIZE - size;
