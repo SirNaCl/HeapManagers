@@ -8,7 +8,7 @@ int main()
 
     /* Initial memory allocation */
     printf("Running malloc tests\n");
-    str2 = (char *)malloc(20);
+    str2 = (char *)malloc(200);
     free(str2);
     str = (char *)malloc(13);
     strcpy(str, "mallocstring");
