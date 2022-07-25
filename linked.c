@@ -49,6 +49,7 @@ block_head_t *grow_heap(block_head_t *last_free, size_t size)
 block_head_t *claim_and_split(block_head_t *block, size_t size)
 {
     block->free = 0;
+    /*
     if (block->size - HEADSIZE - size >= MINSIZE)
     {
         // Split excess into new block if worthwhile
@@ -58,7 +59,7 @@ block_head_t *claim_and_split(block_head_t *block, size_t size)
         nb->size = NORMALIZE(block->size - HEADSIZE - size);
         block->next = nb;
         block->size = size;
-    }
+    }*/
 
     return block;
 }
