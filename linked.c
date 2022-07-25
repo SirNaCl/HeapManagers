@@ -28,7 +28,7 @@ block_head_t *grow_heap(block_head_t *last_free, size_t size)
     void *block_end = sbrk(NORMALIZE(size + HEADSIZE));
 
     // return NULL if allocation failed
-    if (block_end == (void *)0)
+    if (block_end == (void *)-1)
     {
         return NULL;
     }
@@ -40,7 +40,7 @@ block_head_t *grow_heap(block_head_t *last_free, size_t size)
     // Assign new break as next free address
     if (last_free)
     {
-        last_free->next = block_end;
+        last_free->next = new_head;
     }
 
     return new_head;
