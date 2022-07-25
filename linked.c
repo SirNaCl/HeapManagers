@@ -134,8 +134,8 @@ void free(void *ptr)
 void *realloc(void *ptr, size_t size)
 {
     // Return null if invalid pionter or size
-    if (!ptr || size <= 0)
-        return NULL;
+    if (!ptr)
+        return malloc(size);
 
     block_head_t *block = ((block_head_t *)ptr) - 1;
     assert(block->free == 0);
