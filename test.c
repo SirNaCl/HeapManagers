@@ -17,6 +17,7 @@ int main()
     printf("Malloced string: %s\n", str);
     printf("Malloc tests PASSED \n");
     /* Reallocating memory */
+    free(str2);
 
     printf("Running realloc tests\n");
     str = (char *)realloc(str, 16);
