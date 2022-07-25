@@ -25,7 +25,7 @@ block_head_t *root = NULL;
 block_head_t *grow_heap(block_head_t *last_free, size_t size)
 {
     block_head_t *new_head = sbrk(0); /*Assign new head's address att current heap break*/
-    void *block_end = sbrk(NORMALIZE(size) + HEADSIZE);
+    void *block_end = sbrk(size + HEADSIZE);
 
     // return NULL if allocation failed
     if (block_end == (void *)-1)
@@ -53,10 +53,10 @@ block_head_t *claim_and_split(block_head_t *block, size_t size)
     if (block->size - HEADSIZE - size >= MINSIZE)
     {
         // Split excess into new block if worthwhile
-        block_head_t *nb = block + NORMALIZE(size);
+        block_head_t *nb = block + size;
         nb->next = block->next;
         nb->free = 1;
-        nb->size = NORMALIZE(block->size - HEADSIZE - size);
+        nb->size = block->size - HEADSIZE - size;
         block->next = nb;
         block->size = size;
     }
@@ -71,7 +71,9 @@ block_head_t *find_free(size_t size)
     {
         if (block->free && size <= block->size)
         {
-            return claim_and_split(block, size);
+            block->free = 0;
+            return block;
+            // return claim_and_split(block, size);
         }
 
         if (!block->next)
@@ -103,6 +105,8 @@ void *malloc(size_t size)
 {
     if (size <= 0)
         return NULL;
+
+    size = NORMALIZE(size);
     block_head_t *f = find_free(size);
 
     if (!f)
@@ -138,7 +142,8 @@ void *realloc(void *ptr, size_t size)
 
     // Reduce size
     if (size < block->size)
-        return (claim_and_split(block, size) + 1);
+        return ptr;
+    // return (claim_and_split(block, size) + 1);
 
     // Find new block if increasing size
     // TODO: Check if block can expand
@@ -156,7 +161,7 @@ void *calloc(size_t nbr, size_t size)
 {
     size_t tot_size = nbr * size;
     void *ptr = malloc(tot_size);
-    if (ptr == NULL)
+    if (!ptr)
         return NULL;
     memset(ptr, 0, tot_size);
     return ptr;
