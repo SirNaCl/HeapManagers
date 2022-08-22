@@ -72,7 +72,8 @@ block_head_t *find_free(size_t size)
             return block;
         }
 
-        if (!block->next)
+        // Break on last block so it can be used in grow
+        if (!block->next) 
             break;
 
         block = block->next;
@@ -115,8 +116,11 @@ void *malloc(size_t size)
 
 void free(void *ptr)
 {
+    // NULL check ptr
     if (!ptr)
         return;
+
+    // Get block's head
     block_head_t *block = (block_head_t *)ptr - 1;
     assert(block->free == 0);
     block->free = 1;
@@ -129,8 +133,9 @@ void *realloc(void *ptr, size_t size)
     if (!ptr)
         return malloc(size);
 
+    // Get the head for the block at ptr
     block_head_t *block = (block_head_t *)ptr - 1;
-    assert(block->free == 0);
+    assert(block->free == 0); // The block should not be free
 
     // No changes if size is the same
     if (NORMALIZE(size) == block->size)
@@ -143,6 +148,8 @@ void *realloc(void *ptr, size_t size)
 
     // Find new block if increasing size
     // TODO: Check if block can expand
+
+    // Allocate new block
     void *nb = malloc(size);
     if (!nb)
         return NULL;
@@ -157,8 +164,11 @@ void *calloc(size_t nbr, size_t size)
 {
     size_t tot_size = nbr * size;
     void *ptr = malloc(tot_size);
+    // Return NULL if allocation failed
     if (!ptr)
         return NULL;
+
+    // Set data to 0
     memset(ptr, 0, tot_size);
     return ptr;
 }
