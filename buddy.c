@@ -85,7 +85,7 @@ int req_lvl(int size)
     int lvl = 0;
     int s = 1 << MINEXP;
 
-    while(tot > size) {
+    while(tot > s) {
         s <<= 1;
         lvl += 1;
     }
