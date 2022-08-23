@@ -8,7 +8,12 @@ linked:
 	@ln ./linked.c gawk-3.1.8/our_alloc.c
 	@cd gawk-3.1.8/ && $(MAKE) clean check 
 
-test: 
+test-linked: 
 	@git pull
 	@gcc -g -o ./test.out test.c linked.c
+	./test.out
+
+test-buddy: 
+	@git pull
+	@gcc -g -o ./test.out test.c buddy.c
 	./test.out
