@@ -1,4 +1,3 @@
-#include <math.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <assert.h>
@@ -98,7 +97,7 @@ head_t *find_free(int level)
 {
     long int mask = 0x1 << (MINEXP + level);
     head_t *block = NULL;
-    for (int i = 0; pow(2,(LEVELS - level)); i++) {
+    for (int i = 0; 1 << (LEVELS - level); i++) {  // 1 << x = 2^x
         block = (head_t*) ((long int)root ^ mask++);
 
         // Check if there is a valid block at address
@@ -177,7 +176,7 @@ void *realloc(void *ptr, size_t size)
     // Get the head for the block at ptr
     head_t *block = get_head(ptr);
     assert(block->used); // The block should not be free
-                         
+
     int level = req_lvl(size);
 
     // No changes if size is the same
@@ -191,7 +190,7 @@ void *realloc(void *ptr, size_t size)
         return NULL;
 
     // Move content to new block
-    memcpy(nb, ptr, pow(2,block->level + MINEXP));
+    memcpy(nb, ptr, 1 << (block->level + MINEXP));
     free(ptr);
     return nb;
 }
