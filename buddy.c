@@ -7,7 +7,7 @@
 #define MINEXP 5 // Smallest possible block = 2^MINEXP
 #define LEVELS 8 // Largest possible block = 2^(MINEXP+LEVELS-1) = 2^12 = 4ki
 #define MAGIC 123456789
-#define BLOCKSIZE 4096
+#define BLOCKSIZE 4096 * 4
 
 // Normalize the data size to a minimum allocation size
 #define NORMALIZE(size) (size + (MINSIZE - size % MINSIZE))
