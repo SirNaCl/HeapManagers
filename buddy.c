@@ -33,7 +33,7 @@ head_t *new()
         return NULL;
     }
 
-    assert(((long int) new & 0xfff) == 0);
+    assert(((long int) n & 0xfff) == 0);
     n->level = LEVELS -1; // Set size of block to largest possible
     n->magic = MAGIC;
     return n;
@@ -52,8 +52,10 @@ head_t *get_buddy(head_t* block)
 // split the given block and return the address to the new buddy
 head_t *split(head_t *block)
 {
-    int index = --block->level;
+    int index = block->level -1;
+    block->level--;
     head_t *b = get_buddy(block);
+    b->level = block->level;
     b->magic = MAGIC;
     return  b;
 }
@@ -97,10 +99,10 @@ head_t *find_free(int level)
 {
     long int mask = 0x1 << (MINEXP + level);
     head_t *block = NULL;
+    //TODO: Fix iteration steps
     for (int i = 0; 1 << (LEVELS - level); i++) {  // 1 << x = 2^x
         block = (head_t*) ((long int)root ^ mask++);
-
-        // Check if there is a valid block at address
+       // Check if there is a valid block at address
         if(block->magic == MAGIC && !block->used)
             return block;
     }
@@ -117,8 +119,10 @@ head_t *get_block(int level)
     head_t *block = NULL;
     
     // find block of correct size or a splittable block
-    while(!(block = find_free(level + split_count)) && ++split_count <= LEVELS - level)
+    while(!(block = find_free(level + split_count)) && split_count <= LEVELS - level){
+        split_count--;
         continue; 
+    }
 
     while(block && split_count-- > 0 )
         block = split(block);
@@ -143,7 +147,7 @@ void unassign(head_t *block)
 
 void *malloc(size_t size)
 {
-    if(size == 0)
+    if(size <= 0)
     {
         return NULL;
     }
