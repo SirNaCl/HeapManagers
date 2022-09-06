@@ -136,6 +136,7 @@ int should_merge(head_t *block)
 
 void unassign(head_t *block)
 {
+    assert(block->used);
     block->used = 0;
 
     if (should_merge(block))
