@@ -15,7 +15,7 @@ typedef struct head_t head_t;
 
 struct head_t
 {
-    int used : 1;    // 0 = free
+    int used;        // 0 = free
     short int level; // 0 smallest possible block, LEVELS (8) = largest possible block
     int magic;
 };
@@ -61,8 +61,7 @@ head_t *split(head_t *block)
 
 head_t *merge(head_t *block)
 {
-    int index = block->level;
-    long int mask = 0xffffffffffffff << (1 + index + MINEXP);
+    long int mask = 0xffffffffffffff << (1 + block->level + MINEXP);
     head_t *primary = (head_t *)((long int)block & mask);
     primary->level++;
     return primary;
