@@ -26,7 +26,7 @@ head_t *root = NULL;
 head_t *new_block()
 {
     int b_size = BLOCKSIZE;
-    long int adr = sbrk(BLOCKSIZE);
+    long int adr = (long int)sbrk(BLOCKSIZE << 1); // Left shift to ensure we have enough memory to align address
     head_t *n = (head_t *)ALIGN(adr);
 
     if (!n)
