@@ -128,9 +128,11 @@ head_t *get_block(int level)
     while (block && split_count-- > 0)
         block = split(block);
 
-    assert(!block->used);
-    block->used = 1;
-
+    if (block)
+    {
+        assert(!block->used);
+        block->used = 1;
+    }
     return block;
 }
 
