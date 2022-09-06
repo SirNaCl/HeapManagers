@@ -4,13 +4,11 @@
 #include <string.h>
 #include <sys/mman.h>
 
-#define MINEXP 5 // Smallest possible block = 2^MINEXP
-#define LEVELS 8 // Largest possible block = 2^(MINEXP+LEVELS-1) = 2^12 = 4ki
+#define MINEXP 4  // Smallest possible block = 2^MINEXP
+#define LEVELS 22 // Largest possible block = 2^(MINEXP+LEVELS-1) = 2^12 = 4ki
 #define MAGIC 123456789
-#define BLOCKSIZE 4096
+#define BLOCKSIZE 0x1 << (MINEXP + LEVELS - 1) // 2^(MINEXP+LEVELS-1)
 
-// Normalize the data size to a minimum allocation size
-#define NORMALIZE(size) (size + (MINSIZE - size % MINSIZE))
 typedef struct head_t head_t;
 
 struct head_t
@@ -19,8 +17,6 @@ struct head_t
     short int level; // 0 smallest possible block, LEVELS (8) = largest possible block
     int magic;
 };
-
-#define HEADSIZE (NORMALIZE(sizeof(head_t)))
 
 head_t *root = NULL;
 
