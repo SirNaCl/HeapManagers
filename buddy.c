@@ -96,7 +96,7 @@ int req_lvl(int size)
 
 head_t *find_free(int level)
 {
-    long int mask = 0;
+    long int mask = 0x1 << (MINEXP + level);
     head_t *block = root;
     while (mask < BLOCKSIZE)
     {
@@ -127,6 +127,9 @@ head_t *get_block(int level)
 
     while (block && split_count-- > 0)
         block = split(block);
+
+    assert(!block->used);
+    block->used = 1;
 
     return block;
 }
