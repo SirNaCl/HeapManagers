@@ -24,7 +24,7 @@ head_t *root = NULL;
 // Generate a new block that can be used as root
 head_t *new_block()
 {
-    head_t *n = (head_t *)mmap(NULL, BLOCKSIZE, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    head_t *n = (head_t *)sbrk(BLOCKSIZE);
 
     if (n == MAP_FAILED)
         return NULL;
