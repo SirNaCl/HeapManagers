@@ -194,7 +194,7 @@ void *realloc(void *ptr, size_t size)
 
     // Get the head for the block at ptr
     head_t *block = get_head(ptr);
-    assert(block->used); // The block should not be free
+    // assert(block->used); // The block should not be free
 
     int level = req_lvl(size);
 
