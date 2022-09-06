@@ -26,6 +26,8 @@ head_t *root = NULL;
 // Generate a new block that can be used as root
 head_t *new_block()
 {
+    int b_size = BLOCKSIZE;
+    int aligned = ALIGN(BLOCKSIZE);
     head_t *n = (head_t *)sbrk(ALIGN(BLOCKSIZE));
 
     if (!n)
