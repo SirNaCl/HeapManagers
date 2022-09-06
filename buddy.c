@@ -25,11 +25,11 @@ struct head_t
 head_t *root = NULL;
 
 // Generate a new block that can be used as root
-head_t *new ()
+head_t *new_block()
 {
     head_t *n = (head_t *)mmap(NULL, BLOCKSIZE, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
 
-    if (new == MAP_FAILED)
+    if (n == MAP_FAILED)
     {
         return NULL;
     }
@@ -102,10 +102,11 @@ head_t *find_free(int level)
     head_t *block = NULL;
     while (mask < BLOCKSIZE)
     {
-        block = (head_t *)((long int)root ^ mask);
         // Check if there is a valid block at address
         if (block->magic == MAGIC && !block->used)
             return block;
+
+        block = (head_t *)((long int)root ^ mask);
         mask += 0x1 << (MINEXP + level);
     }
     return NULL;
@@ -115,7 +116,7 @@ head_t *get_block(int level)
 {
     if (!root)
     {
-        root = new ();
+        root = new_block();
     }
 
     int split_count = 0;
