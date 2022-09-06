@@ -53,7 +53,7 @@ head_t *split(head_t *block)
     int index = block->level - 1;
     block->level--;
     int mask = 0x1 << (block->level + MINEXP);
-    head_t *b = ((long int)block | mask);
+    head_t *b = (head_t *)((long int)block | mask);
     b->level = block->level;
     b->magic = MAGIC;
     return b;
