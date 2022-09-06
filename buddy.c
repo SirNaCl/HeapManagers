@@ -31,7 +31,7 @@ head_t *new_block()
     if (!n)
         return NULL;
 
-    assert(((long int)n & 0xfff) == 0);
+    assert(((long int)n & (BLOCKSIZE - 1)) == 0);
     n->level = LEVELS - 1; // Set size of block to largest possible
     n->magic = MAGIC;
     n->used = 0;
