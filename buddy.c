@@ -4,8 +4,8 @@
 #include <string.h>
 #include <sys/mman.h>
 
-#define MINEXP 4 // Smallest possible block = 2^MINEXP
-#define LEVELS 22
+#define MINEXP 5 // Smallest possible block = 2^MINEXP
+#define LEVELS 21
 #define MAGIC 123456789
 #define BLOCKSIZE 1 << (LEVELS + MINEXP - 1) // Largest possible block = 2^(MINEXP+LEVELS-1)
 #define ALIGN(size) (((size) + (BLOCKSIZE - 1)) & ~(BLOCKSIZE - 1))
@@ -14,8 +14,8 @@ typedef struct head_t head_t;
 
 struct head_t
 {
-    int used;        // 0 = free
-    short int level; // 0 smallest possible block, LEVELS = largest possible block
+    int used;  // 0 = free
+    int level; // 0 smallest possible block, LEVELS = largest possible block
     int magic;
 };
 #define HEAD_SIZE sizeof(head_t)
