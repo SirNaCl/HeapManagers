@@ -92,7 +92,7 @@ head_t *get_head(void *adr)
 
 int req_lvl(int size)
 {
-    int tot = ALIGN(size + HEAD_SIZE);
+    int tot = size + HEAD_SIZE;
 
     int lvl = 0;
     int s = 1 << MINEXP;
