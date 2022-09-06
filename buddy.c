@@ -55,11 +55,13 @@ head_t *get_buddy(head_t *block)
 // split the given block and return the address to the new buddy
 head_t *split(head_t *block)
 {
-    int index = block->level - 1;
     block->level--;
-    head_t *b = get_buddy(block);
+    int index = block->level;
+    long int mask = 0x1 << (index + MINEXP);
+    head_t *b = (head_t *)((long int)block | mask);
     b->level = block->level;
     b->magic = MAGIC;
+    b->used = 0;
     return b;
 }
 
@@ -67,6 +69,8 @@ head_t *merge(head_t *block)
 {
     long int mask = 0xffffffffffffff << (1 + block->level + MINEXP);
     head_t *primary = (head_t *)((long int)block & mask);
+    head_t *b = get_buddy(primary);
+    b->magic = 0; // Invalidate block
     primary->level++;
     return primary;
 }
