@@ -8,8 +8,7 @@
 #define LEVELS 12 // Largest possible block = 2^(MINEXP+LEVELS-1) = 2^12 = 4ki
 #define MAGIC 123456789
 #define BLOCKSIZE (1 << (LEVELS + MINEXP - 1)) // 2^(MINEXP+LEVEL)
-#define ALIGNMENT BLOCKSIZE
-#define ALIGN(size) (((size) + (ALIGNMENT - 1)) & ~(ALIGNMENT - 1))
+#define ALIGN(size) (((size) + (BLOCKSIZE - 1)) & ~(BLOCKSIZE - 1))
 
 typedef struct head_t head_t;
 
@@ -19,7 +18,7 @@ struct head_t
     short int level; // 0 smallest possible block, LEVELS (8) = largest possible block
     int magic;
 };
-#define HEAD_SIZE (ALIGN(sizeof(head_t)))
+#define HEAD_SIZE sizeof(head_t)
 
 head_t *root = NULL;
 
@@ -27,10 +26,8 @@ head_t *root = NULL;
 head_t *new_block()
 {
     int b_size = BLOCKSIZE;
-    int aligned = ALIGN(BLOCKSIZE);
     long int adr = sbrk(BLOCKSIZE);
-    head_t *n = (head_t *)adr;
-    adr = ALIGN(adr);
+    head_t *n = (head_t *)ALIGN(adr);
 
     if (!n)
         return NULL;
