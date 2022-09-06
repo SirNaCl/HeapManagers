@@ -30,7 +30,7 @@ head_t *new_block()
     long int allocation_size = BLOCKSIZE + buffer;
     long int adr = (long int)sbrk(allocation_size << 1); // Allocate largest block plus alignment buffer
 
-    head_t *n = (head_t *)ALIGN(adr);
+    volatile head_t *n = (head_t *)ALIGN(adr);
 
     if (!n)
         return NULL;
