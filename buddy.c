@@ -6,7 +6,7 @@
 #include <math.h>
 
 #define MINEXP 5 // Smallest possible block = 2^MINEXP
-#define LEVELS 9 // Largest possible block = 2^(MINEXP+LEVELS-1) = 2^12 = 4ki
+#define LEVELS 8 // Largest possible block = 2^(MINEXP+LEVELS-1) = 2^12 = 4ki
 #define MAGIC 123456789
 #define BLOCKSIZE pow(2, MINEXP + LEVELS - 1) // 2^(MINEXP+LEVEL-1)
 
