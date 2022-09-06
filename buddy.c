@@ -20,26 +20,22 @@ struct head_t
 };
 #define HEAD_SIZE sizeof(head_t)
 
-head_t *root = NULL;
+volatile head_t *root = NULL;
 
 // Generate a new block that can be used as root
-head_t *new_block()
+void *new_block()
 {
     long int aligned = ALIGN((long int)sbrk(0));   // Get the next free aligned address (ends with enough zeroes)
     long int buffer = aligned - (long int)sbrk(0); // The extra amount of memory required to align addresses
     long int allocation_size = BLOCKSIZE + buffer;
     long int adr = (long int)sbrk(allocation_size << 1); // Allocate largest block plus alignment buffer
 
-    volatile head_t *n = (head_t *)ALIGN(adr);
+    root = (head_t *)ALIGN(adr);
 
-    if (!n)
-        return NULL;
-
-    assert(((long int)n & (BLOCKSIZE - 1)) == 0);
-    n->level = LEVELS - 1; // Set size of block to largest possible
-    n->magic = MAGIC;
-    n->used = 0;
-    return n;
+    assert(((long int)root & (BLOCKSIZE - 1)) == 0);
+    root->level = LEVELS - 1; // Set size of block to largest possible
+    root->magic = MAGIC;
+    root->used = 0;
 }
 
 // Returns the address to the given block's buddy
@@ -125,7 +121,7 @@ head_t *find_free(int level)
 head_t *get_block(int level)
 {
     if (!root)
-        root = new_block();
+        new_block();
 
     short split_count = 0;
     head_t *block = find_free(level);
