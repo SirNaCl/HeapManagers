@@ -142,26 +142,22 @@ void unassign(head_t *block)
 {
     block->used = 0;
 
-    if (should_merge(block))
-    {
-        merge(block);
-    }
+    should_merge(block) && merge(block);
+
     return;
 }
 
 void *malloc(size_t size)
 {
     if (size <= 0)
-    {
         return NULL;
-    }
 
     int index = req_lvl(size);
     head_t *block = get_block(index);
+
     if (!block)
-    {
         return NULL;
-    }
+
     return data_adr(block);
 }
 
