@@ -7,8 +7,8 @@
 #define MINEXP 5 // Smallest possible block = 2^MINEXP
 #define LEVELS 18
 #define MAGIC 123456789
-#define BLOCKSIZE 1 << (LEVELS + MINEXP - 1)                        // Largest possible block = 2^(MINEXP+LEVELS-1)
-#define ALIGN(size) (((size) + (BLOCKSIZE - 1)) & ~(BLOCKSIZE - 1)) // maybe leftshift blocksize one instead of subtract
+#define BLOCKSIZE 1 << (LEVELS + MINEXP - 1) // Largest possible block = 2^(MINEXP+LEVELS-1)
+#define ALIGN(size) (((size) + (BLOCKSIZE - 1)) & ~(BLOCKSIZE - 1))
 
 typedef struct head_t head_t;
 
@@ -46,7 +46,6 @@ head_t *new_block()
 // Returns the address to the given block's buddy
 head_t *get_buddy(head_t *block)
 {
-    // FIXME: Causes seg fault
     int index = block->level;
     // Shift the one to wanted position,
     // the mask adds / subtracts the memory address by the block's size by toggling the given bit
@@ -59,16 +58,16 @@ head_t *split(head_t *block)
 {
     assert(block->level > 0);
     block->level--;
-    int index = block->level;
 
-    long int mask = 0x1 << (index + MINEXP);
-    head_t *b = (head_t *)((long int)block | mask);
+    // int index = block->level;
+    // long int mask = 0x1 << (index + MINEXP);
+    // head_t *b = (head_t *)((long int)block | mask);
 
-    // head_t *b = get_buddy(block);
+    head_t *b = get_buddy(block);
     b->level = block->level;
     b->magic = MAGIC;
     b->used = 0;
-    return b;
+    return block;
 }
 
 head_t *merge(head_t *block)
@@ -194,7 +193,7 @@ void *realloc(void *ptr, size_t size)
 
     // Get the head for the block at ptr
     head_t *block = get_head(ptr);
-    // assert(block->used); // The block should not be free
+    assert(block->used); // The block should not be free
 
     int level = req_lvl(size);
 
