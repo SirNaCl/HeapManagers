@@ -103,7 +103,7 @@ head_t *find_free(int level)
     while (mask < BLOCKSIZE)
     {
         // Check if there is a valid block at address
-        if (block->magic == MAGIC && !block->used)
+        if (block->magic == MAGIC && !block->used && block->level == level)
             return block;
 
         block = (head_t *)((long int)root ^ mask);
@@ -115,18 +115,16 @@ head_t *find_free(int level)
 head_t *get_block(int level)
 {
     if (!root)
-    {
         root = new_block();
-    }
 
-    int split_count = 0;
-    head_t *block = NULL;
+    short split_count = 0;
+    head_t *block = find_free(level + split_count);
 
     // find block of correct size or a splittable block
-    while (!(block = find_free(level + split_count)) && split_count <= LEVELS - level)
+    while (!block && split_count <= LEVELS - level)
     {
-        split_count--;
-        continue;
+        block = find_free(level + split_count);
+        split_count++;
     }
 
     while (block && split_count-- > 0)
