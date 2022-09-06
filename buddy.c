@@ -28,7 +28,9 @@ head_t *new_block()
 {
     int b_size = BLOCKSIZE;
     int aligned = ALIGN(BLOCKSIZE);
-    head_t *n = (head_t *)sbrk(ALIGN(BLOCKSIZE));
+    long int adr = sbrk(BLOCKSIZE);
+    head_t *n = (head_t *)adr;
+    adr = ALIGN(adr);
 
     if (!n)
         return NULL;
