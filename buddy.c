@@ -7,7 +7,7 @@
 #define MINEXP 5  // Smallest possible block = 2^MINEXP
 #define LEVELS 10 // Largest possible block = 2^(MINEXP+LEVELS-1) = 2^12 = 4ki
 #define MAGIC 123456789
-#define BLOCKSIZE (1 << LEVELS + MINEXP - 1) // 2^(MINEXP+LEVEL)
+#define BLOCKSIZE (1 << (LEVELS + MINEXP - 1)) // 2^(MINEXP+LEVEL)
 #define ALIGNMENT 12
 #define ALIGN(size) (((size) + (ALIGNMENT - 1)) & ~(ALIGNMENT - 1))
 
