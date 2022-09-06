@@ -103,7 +103,7 @@ head_t *find_free(int level)
         if (block->magic == MAGIC && !block->used && block->level == level)
             return block;
 
-        block = (head_t *)((long int)root ^ mask);
+        block = (head_t *)((long int)root | mask);
         mask += 0x1 << (MINEXP + level);
     }
     return NULL;
