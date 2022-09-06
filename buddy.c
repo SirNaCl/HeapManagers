@@ -30,9 +30,7 @@ head_t *new_block()
     head_t *n = (head_t *)mmap(NULL, BLOCKSIZE, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
 
     if (n == MAP_FAILED)
-    {
         return NULL;
-    }
 
     assert(((long int)n & 0xfff) == 0);
     n->level = LEVELS - 1; // Set size of block to largest possible
@@ -124,7 +122,7 @@ head_t *get_block(int level)
     while (!block && split_count <= LEVELS - level)
     {
         block = find_free(level + split_count);
-        split_count++;
+        split_count += 1;
     }
 
     while (block && split_count-- > 0)
