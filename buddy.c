@@ -4,10 +4,10 @@
 #include <string.h>
 #include <sys/mman.h>
 
-#define MINEXP 5  // Smallest possible block = 2^MINEXP
-#define LEVELS 12 // Largest possible block = 2^(MINEXP+LEVELS-1) = 2^12 = 4ki
+#define MINEXP 5 // Smallest possible block = 2^MINEXP
+#define LEVELS 12
 #define MAGIC 123456789
-#define BLOCKSIZE (1 << (LEVELS + MINEXP - 1)) // 2^(MINEXP+LEVEL)
+#define BLOCKSIZE 1 << (LEVELS + MINEXP - 1) // Largest possible block = 2^(MINEXP+LEVELS-1)
 #define ALIGN(size) (((size) + (BLOCKSIZE - 1)) & ~(BLOCKSIZE - 1))
 
 typedef struct head_t head_t;
@@ -25,10 +25,10 @@ head_t *root = NULL;
 // Generate a new block that can be used as root
 head_t *new_block()
 {
-    long int aligned = ALIGN((long int)sbrk(0));       // Get the next free aligned address (ends with enough zeroes)
-    long int buffer = aligned - (long int)sbrk(0);     // The extra amount of memory required to align addresses
-    long int adr = (long int)sbrk(BLOCKSIZE + buffer); // Allocate largest block plus alignment buffer
+    long int aligned = ALIGN((long int)sbrk(0));   // Get the next free aligned address (ends with enough zeroes)
+    long int buffer = aligned - (long int)sbrk(0); // The extra amount of memory required to align addresses
     long int allocation_size = BLOCKSIZE + buffer;
+    long int adr = (long int)sbrk(allocation_size << 1); // Allocate largest block plus alignment buffer
 
     head_t *n = (head_t *)ALIGN(adr);
 
