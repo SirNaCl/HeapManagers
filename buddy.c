@@ -7,9 +7,9 @@
 #define MINEXP 12 // Smallest possible block = 2^MINEXP
 #define LEVELS 8  // Largest possible block = 2^(MINEXP+LEVELS-1) = 2^12 = 4ki
 #define MAGIC 123456789
+#define BLOCKSIZE (1 << (LEVELS + MINEXP - 1)) // 2^(MINEXP+LEVEL)
 #define ALIGNMENT 12
 #define ALIGN(size) (((size) + (ALIGNMENT - 1)) & ~(ALIGNMENT - 1))
-#define BLOCKSIZE ALIGN((1 << (LEVELS + MINEXP - 1))) // 2^(MINEXP+LEVEL)
 
 typedef struct head_t head_t;
 
@@ -52,7 +52,8 @@ head_t *split(head_t *block)
 {
     int index = block->level - 1;
     block->level--;
-    head_t *b = get_buddy(block);
+    int mask = 0x1 << (block->level + MINEXP);
+    head_t *b = ((long int)block | mask);
     b->level = block->level;
     b->magic = MAGIC;
     return b;
