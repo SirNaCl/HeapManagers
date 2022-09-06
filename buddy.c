@@ -129,10 +129,8 @@ head_t *get_block(int level)
         block = split(block);
 
     if (block)
-    {
-        assert(!block->used);
         block->used = 1;
-    }
+
     return block;
 }
 
