@@ -121,8 +121,8 @@ head_t *get_block(int level)
     // find block of correct size or a splittable block
     while (!block && split_count <= LEVELS - level)
     {
-        block = find_free(level + split_count);
         split_count += 1;
+        block = find_free(level + split_count);
     }
 
     while (block && split_count-- > 0)
