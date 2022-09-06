@@ -4,8 +4,8 @@
 #include <string.h>
 #include <sys/mman.h>
 
-#define MINEXP 5 // Smallest possible block = 2^MINEXP
-#define LEVELS 8 // Largest possible block = 2^(MINEXP+LEVELS-1) = 2^12 = 4ki
+#define MINEXP 5  // Smallest possible block = 2^MINEXP
+#define LEVELS 12 // Largest possible block = 2^(MINEXP+LEVELS-1) = 2^12 = 4ki
 #define MAGIC 123456789
 #define BLOCKSIZE (1 << (LEVELS + MINEXP - 1)) // 2^(MINEXP+LEVEL)
 #define ALIGNMENT 12
@@ -28,12 +28,13 @@ head_t *new_block()
 {
     head_t *n = (head_t *)sbrk(BLOCKSIZE);
 
-    if (n == MAP_FAILED)
+    if (!n)
         return NULL;
 
     assert(((long int)n & 0xfff) == 0);
     n->level = LEVELS - 1; // Set size of block to largest possible
     n->magic = MAGIC;
+    n->used = 0;
     return n;
 }
 
@@ -114,13 +115,13 @@ head_t *get_block(int level)
         root = new_block();
 
     short split_count = 0;
-    head_t *block = find_free(level + split_count);
+    head_t *block = NULL;
 
     // find block of correct size or a splittable block
     while (!block && split_count <= LEVELS - level)
     {
-        split_count += 1;
         block = find_free(level + split_count);
+        split_count += 1;
     }
 
     while (block && split_count-- > 0)
