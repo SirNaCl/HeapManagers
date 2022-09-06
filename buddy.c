@@ -7,8 +7,8 @@
 #define MINEXP 5 // Smallest possible block = 2^MINEXP
 #define LEVELS 18
 #define MAGIC 123456789
-#define BLOCKSIZE 1 << (LEVELS + MINEXP - 1) // Largest possible block = 2^(MINEXP+LEVELS-1)
-#define ALIGN(size) (((size) + (BLOCKSIZE - 1)) & ~(BLOCKSIZE - 1))
+#define BLOCKSIZE 1 << (LEVELS + MINEXP - 1)                        // Largest possible block = 2^(MINEXP+LEVELS-1)
+#define ALIGN(size) (((size) + (BLOCKSIZE - 1)) & ~(BLOCKSIZE - 1)) // maybe leftshift blocksize one instead of subtract
 
 typedef struct head_t head_t;
 
@@ -26,7 +26,7 @@ head_t *root = NULL;
 head_t *new_block()
 {
     long int aligned = ALIGN(BLOCKSIZE);         // Get the next free aligned address (ends with enough zeroes)
-    long int adr = (long int)sbrk(aligned << 1); // Allocate largest block plus alignment buffer
+    long int adr = (long int)sbrk(aligned << 2); // Allocate largest block plus alignment buffer
     long int mask = 0xfffff << LEVELS + MINEXP - 1;
     adr += aligned;
     adr &= mask;
