@@ -25,6 +25,7 @@ head_t *root = NULL;
 // Generate a new block that can be used as root
 head_t *new_block()
 {
+    long int b_size = BLOCKSIZE;
     long int aligned = ALIGN(BLOCKSIZE);           // Get the next free aligned address (ends with enough zeroes)
     long int buffer = aligned - (long int)sbrk(0); // The extra amount of memory required to align addresses
     long int allocation_size = BLOCKSIZE + buffer;
