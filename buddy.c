@@ -15,7 +15,7 @@ typedef struct head_t head_t;
 struct head_t
 {
     int used;        // 0 = free
-    short int level; // 0 smallest possible block, LEVELS (8) = largest possible block
+    short int level; // 0 smallest possible block, LEVELS = largest possible block
     int magic;
 };
 #define HEAD_SIZE sizeof(head_t)
@@ -45,6 +45,7 @@ head_t *new_block()
 // Returns the address to the given block's buddy
 head_t *get_buddy(head_t *block)
 {
+    // FIXME: Causes seg fault
     int index = block->level;
     // Shift the one to wanted position,
     // the mask adds / subtracts the memory address by the block's size by toggling the given bit
@@ -55,10 +56,14 @@ head_t *get_buddy(head_t *block)
 // split the given block and return the address to the new buddy
 head_t *split(head_t *block)
 {
+    assert(block->level > 0);
     block->level--;
     int index = block->level;
+    /*
     long int mask = 0x1 << (index + MINEXP);
     head_t *b = (head_t *)((long int)block | mask);
+    */
+    head_t *b = get_buddy(block);
     b->level = block->level;
     b->magic = MAGIC;
     b->used = 0;
@@ -123,13 +128,13 @@ head_t *get_block(int level)
         root = new_block();
 
     short split_count = 0;
-    head_t *block = NULL;
+    head_t *block = find_free(level);
 
     // find block of correct size or a splittable block
     while (!block && split_count <= LEVELS - level)
     {
-        block = find_free(level + split_count);
         split_count += 1;
+        block = find_free(level + split_count);
     }
 
     while (block && split_count-- > 0)
