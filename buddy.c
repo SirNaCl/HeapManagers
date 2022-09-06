@@ -28,6 +28,7 @@ head_t *new_block()
     long int aligned = ALIGN((long int)sbrk(0));       // Get the next free aligned address (ends with enough zeroes)
     long int buffer = aligned - (long int)sbrk(0);     // The extra amount of memory required to align addresses
     long int adr = (long int)sbrk(BLOCKSIZE + buffer); // Allocate largest block plus alignment buffer
+    long int allocation_size = BLOCKSIZE + buffer;
 
     head_t *n = (head_t *)ALIGN(adr);
 
