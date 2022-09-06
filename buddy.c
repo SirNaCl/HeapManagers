@@ -25,8 +25,8 @@ head_t *root = NULL;
 // Generate a new block that can be used as root
 head_t *new_block()
 {
-    long int aligned = ALIGN(BLOCKSIZE);         // Get the next free aligned address (ends with enough zeroes)
-    long int adr = (long int)sbrk(aligned << 2); // Allocate largest block plus alignment buffer
+    long int aligned = ALIGN(BLOCKSIZE);           // Get the next free aligned address (ends with enough zeroes)
+    long int adr = (long int)sbrk(BLOCKSIZE << 1); // Allocate largest block plus alignment buffer
     long int mask = 0xfffff << LEVELS + MINEXP - 1;
     adr += aligned;
     adr &= mask;
