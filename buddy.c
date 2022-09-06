@@ -4,8 +4,8 @@
 #include <string.h>
 #include <sys/mman.h>
 
-#define MINEXP 4 // Smallest possible block = 2^MINEXP
-#define LEVELS 20
+#define MINEXP 5 // Smallest possible block = 2^MINEXP
+#define LEVELS 18
 #define MAGIC 123456789
 #define BLOCKSIZE 1 << (LEVELS + MINEXP - 1) // Largest possible block = 2^(MINEXP+LEVELS-1)
 #define ALIGN(size) (((size) + (BLOCKSIZE - 1)) & ~(BLOCKSIZE - 1))
@@ -116,8 +116,8 @@ head_t *find_free(int level)
         if (block->magic == MAGIC && !block->used && block->level == level)
             return block;
 
-        mask += 0x1 << (MINEXP + level);
         block = (head_t *)((long int)root | mask);
+        mask += 0x1 << (MINEXP + level);
     }
     return NULL;
 }
@@ -140,12 +140,15 @@ head_t *get_block(int level)
     while (block && split_count-- > 0)
         block = split(block);
 
+    if (block)
+        block->used = 1;
+
     return block;
 }
 
 int should_merge(head_t *block)
 {
-    return !block->used && !(get_buddy(block)->used);
+    return !block->used && !get_buddy(block)->used;
 }
 
 void unassign(head_t *block)
@@ -169,7 +172,6 @@ void *malloc(size_t size)
     if (!block)
         return NULL;
 
-    block->used = 1;
     return data_adr(block);
 }
 
