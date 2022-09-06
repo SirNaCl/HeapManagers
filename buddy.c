@@ -3,12 +3,13 @@
 #include <assert.h>
 #include <string.h>
 #include <sys/mman.h>
-#include <math.h>
 
 #define MINEXP 5 // Smallest possible block = 2^MINEXP
 #define LEVELS 8 // Largest possible block = 2^(MINEXP+LEVELS-1) = 2^12 = 4ki
 #define MAGIC 123456789
-#define BLOCKSIZE pow(2, MINEXP + LEVELS - 1) // 2^(MINEXP+LEVEL-1)
+#define BLOCKSIZE (1 << LEVELS + MINEXP) // 2^(MINEXP+LEVEL)
+#define ALIGNMENT 12
+#define ALIGN(size) (((size) + (ALIGNMENT - 1)) & ~(ALIGNMENT - 1))
 
 typedef struct head_t head_t;
 
@@ -18,6 +19,7 @@ struct head_t
     short int level; // 0 smallest possible block, LEVELS (8) = largest possible block
     int magic;
 };
+#define HEAD_SIZE (ALIGN(sizeof(head_t)))
 
 head_t *root = NULL;
 
@@ -76,7 +78,7 @@ head_t *get_head(void *adr)
 
 int req_lvl(int size)
 {
-    int tot = size + sizeof(head_t);
+    int tot = ALIGN(size + HEAD_SIZE);
 
     int lvl = 0;
     int s = 1 << MINEXP;
