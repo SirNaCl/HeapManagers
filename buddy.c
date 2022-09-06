@@ -3,11 +3,12 @@
 #include <assert.h>
 #include <string.h>
 #include <sys/mman.h>
+#include <math.h>
 
 #define MINEXP 4  // Smallest possible block = 2^MINEXP
 #define LEVELS 22 // Largest possible block = 2^(MINEXP+LEVELS-1) = 2^12 = 4ki
 #define MAGIC 123456789
-#define BLOCKSIZE 0x1 << (MINEXP + LEVELS) // 2^(MINEXP+LEVELS)
+#define BLOCKSIZE pow(2, MINEXP + LEVELS - 1) // 2^(MINEXP+LEVEL-1)
 
 typedef struct head_t head_t;
 
