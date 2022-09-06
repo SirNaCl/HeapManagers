@@ -5,7 +5,7 @@
 #include <sys/mman.h>
 
 #define MINEXP 5 // Smallest possible block = 2^MINEXP
-#define LEVELS 18
+#define LEVELS 10
 #define MAGIC 123456789
 #define BLOCKSIZE 1 << (LEVELS + MINEXP - 1) // Largest possible block = 2^(MINEXP+LEVELS-1)
 #define ALIGN(size) (((size) + (BLOCKSIZE - 1)) & ~(BLOCKSIZE - 1))
@@ -25,13 +25,13 @@ head_t *root = NULL;
 // Generate a new block that can be used as root
 head_t *new_block()
 {
-    long int b_size = BLOCKSIZE;
-    long int aligned = ALIGN(BLOCKSIZE);           // Get the next free aligned address (ends with enough zeroes)
-    long int buffer = aligned - (long int)sbrk(0); // The extra amount of memory required to align addresses
-    long int allocation_size = BLOCKSIZE + buffer;
-    long int adr = (long int)sbrk(allocation_size); // Allocate largest block plus alignment buffer
+    long int aligned = ALIGN(BLOCKSIZE);         // Get the next free aligned address (ends with enough zeroes)
+    long int adr = (long int)sbrk(aligned << 1); // Allocate largest block plus alignment buffer
+    long int mask = 0xfffff << LEVELS + MINEXP - 1;
+    adr += aligned;
+    adr &= mask;
 
-    volatile head_t *n = (head_t *)ALIGN(adr);
+    head_t *n = (head_t *)adr;
 
     if (!n)
         return NULL;
