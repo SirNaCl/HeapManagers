@@ -25,21 +25,21 @@ head_t *root = NULL;
 // Generate a new block that can be used as root
 head_t *new_block()
 {
-    /*
+
     long int aligned = ALIGN(BLOCKSIZE);         // Get the next free aligned address (ends with enough zeroes)
     long int adr = (long int)sbrk(aligned << 2); // Allocate largest block plus alignment buffer
     // long int mask = 0xfffff<< LEVELS + MINEXP - 1;
     // long int mask = ~((0x1 << (LEVELS + MINEXP)) - 1);
     // long int mask = 0xfffff << (LEVELS + MINEXP - 1);
     long int mask = ~0 - ((1 << (LEVELS + MINEXP - 1)) - 1);
-    */
 
     // Get next aligned address and allocate the difference between current break and that address
+    /*
     long int current_break = (long int)sbrk(0);
     long int aligned = ALIGN(current_break) << 1; // double the amount to prevent segfault
     long int adr = sbrk(aligned - current_break);
     long int mask = ~0 - ((1 << (LEVELS + MINEXP - 1)) - 1);
-
+    */
     adr &= mask; // Align address using mask
 
     head_t *n = (head_t *)adr;
