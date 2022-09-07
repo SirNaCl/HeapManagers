@@ -60,7 +60,7 @@ head_t *get_buddy(head_t *block)
 head_t *split(head_t *block)
 {
     assert(block->level > 0);
-    block->level--;
+    block->level -= 1;
 
     // int index = block->level;
     // long int mask = 0x1 << (index + MINEXP);
@@ -70,7 +70,7 @@ head_t *split(head_t *block)
     b->level = block->level;
     b->magic = MAGIC;
     b->used = 0;
-    return block;
+    return b;
 }
 
 head_t *merge(head_t *block)
@@ -111,7 +111,7 @@ int req_lvl(int size)
 
 head_t *find_free(int level)
 {
-    long int mask = 0;
+    long int mask = 0x1 << (MINEXP + level);
     head_t *block = root;
     while (mask < BLOCKSIZE)
     {
@@ -120,7 +120,8 @@ head_t *find_free(int level)
             return block;
 
         block = (head_t *)((long int)root | mask);
-        mask += 0x1 << (MINEXP + level);
+        // mask += 0x1 << (MINEXP + level); // FIXME DETTA ÄR FEL!!!!! Hoppar mellan att kolla på olika nivåer istället för samma nivå!!!!
+        mask += 0x1 << (MINEXP + level + 1);
     }
     return NULL;
 }
