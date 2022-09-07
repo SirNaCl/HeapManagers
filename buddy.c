@@ -30,7 +30,7 @@ head_t *new_block()
     // long int mask = 0xfffff << LEVELS + MINEXP - 1;
     //  long int mask = ~((0x1 << (LEVELS + MINEXP)) - 1);
     //  long int mask = 0xfffff << (LEVELS + MINEXP - 1);
-    long int mask = ~0 - ((1 << (LEVELS + MINEXP - 1))); // kanske -1 efter förflyttning
+    long int mask = ~0 - ((1 << (LEVELS + MINEXP - 1)) - 1); // kanske -1 efter förflyttning
 
     // Get next aligned address and allocate the difference between current break and that address
     /*
