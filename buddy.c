@@ -5,7 +5,7 @@
 #include <sys/mman.h>
 
 #define MINEXP 5 // Smallest possible block = 2^MINEXP
-#define LEVELS 25
+#define LEVELS 10
 #define MAGIC 123456789
 #define BLOCKSIZE 1 << (LEVELS + MINEXP - 1) // Largest possible block = 2^(MINEXP+LEVELS-1)
 #define ALIGN(size) (((size) + (BLOCKSIZE - 1)) & ~(BLOCKSIZE - 1))
