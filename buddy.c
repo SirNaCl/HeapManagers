@@ -26,21 +26,30 @@ head_t *root = NULL;
 head_t *new_block()
 {
 
+    /*
     long int adr = (long int)sbrk(BLOCKSIZE << 1); // Allocate largest block plus alignment buffer
     long int mask = 0xfffff << LEVELS + MINEXP - 1;
     //  long int mask = ~((0x1 << (LEVELS + MINEXP)) - 1);
     //  long int mask = 0xfffff << (LEVELS + MINEXP - 1);
     // long int mask = ~0 - ((1 << (LEVELS + MINEXP - 1)) - 1); // kanske -1 efter förflyttning
 
-    // Get next aligned address and allocate the difference between current break and that address
-    /*
-    long int current_break = (long int)sbrk(0);
-    long int aligned = ALIGN(current_break) << 1; // double the amount to prevent segfault
-    long int adr = sbrk(aligned - current_break);
-    long int mask = ~0 - ((1 << (LEVELS + MINEXP - 1)) - 1);
-    */
     adr += 1 << (LEVELS + MINEXP); // todo kanske ta bort
     adr &= mask;                   // Align address using mask
+    */
+
+    long int mask = 0xfffff << LEVELS + MINEXP - 1;
+    long int current = sbrk(0);
+    long int root_pos = current + (1 << (LEVELS + MINEXP)); // todo kanske ta bort
+    root_pos &= mask;
+    long int buff_amount = root_pos - current;
+
+    long int adr = (long int)sbrk(BLOCKSIZE + buff_amount); // Allocate largest block plus alignment buffer
+    //  long int mask = ~((0x1 << (LEVELS + MINEXP)) - 1);
+    //  long int mask = 0xfffff << (LEVELS + MINEXP - 1);
+    // long int mask = ~0 - ((1 << (LEVELS + MINEXP - 1)) - 1); // kanske -1 efter förflyttning
+
+    adr += 1 << (LEVELS + MINEXP); // Increase adr before mask to prevent leaving block
+    adr &= mask;
 
     head_t *n = (head_t *)adr;
 
