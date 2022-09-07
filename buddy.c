@@ -39,8 +39,8 @@ head_t *new_block()
     long int adr = sbrk(aligned - current_break);
     long int mask = ~0 - ((1 << (LEVELS + MINEXP - 1)) - 1);
     */
-    adr += 1 << (LEVELS + MINEXP; // todo kanske ta bort
-    adr &= mask;    // Align address using mask
+    adr += 1 << (LEVELS + MINEXP); // todo kanske ta bort
+    adr &= mask;                   // Align address using mask
 
     head_t *n = (head_t *)adr;
 
