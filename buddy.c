@@ -177,7 +177,14 @@ head_t *get_block(int level)
 
 int should_merge(head_t *block)
 {
-    return block->level < LEVELS - 1 && !get_buddy(block)->used;
+    if (block->level >= LEVELS)
+    {
+        return 0;
+    }
+
+    head_t *b = get_buddy(block);
+
+    return b->level == block->level && !b->used;
 }
 
 void unassign(head_t *block)
