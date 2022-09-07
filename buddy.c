@@ -37,7 +37,7 @@ head_t *new_block()
     adr &= mask;                   // Align address using mask
     */
 
-    long int mask = 0xfffff << LEVELS + MINEXP - 1;
+       long int mask = 0xfffff << LEVELS + MINEXP;
     long int current = (long int)sbrk(0);
     long int root_pos = current + (1 << (LEVELS + MINEXP)); // todo kanske ta bort
     root_pos &= mask;
