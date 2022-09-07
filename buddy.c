@@ -41,7 +41,7 @@ head_t *new_block()
     // p /t (current + ~(current | mask) + 1)
     long int mask = 0xfffff << LEVELS + MINEXP;
     long int current = (long int)sbrk(0);
-    long int root_pos = (current + ~(current | mask) + 1);
+    // long int root_pos = (current + ~(current | mask) + 1);
     long int trash = sbrk(~(current | mask) + 1);
 
     // current + (1 << (LEVELS + MINEXP)); // todo kanske ta bort
@@ -49,13 +49,13 @@ head_t *new_block()
     // long int buff_amount = root_pos - current;
     // long int alloc_amount = BLOCKSIZE + buff_amount;
 
-    long int adr = (long int)sbrk(BLOCKSIZE << 2); // Allocate largest block plus alignment buffer
+    long int adr = (long int)sbrk(BLOCKSIZE); // Allocate largest block plus alignment buffer
     //  long int mask = ~((0x1 << (LEVELS + MINEXP)) - 1);
     //  long int mask = 0xfffff << (LEVELS + MINEXP - 1);
     // long int mask = ~0 - ((1 << (LEVELS + MINEXP - 1)) - 1); // kanske -1 efter förflyttning
 
-    adr += 1 << (LEVELS + MINEXP); // Increase adr before mask to prevent leaving block
-    adr &= mask;
+    // adr += 1 << (LEVELS + MINEXP); // Increase adr before mask to prevent leaving block
+    // adr &= mask;
 
     head_t *n = (head_t *)adr;
 
