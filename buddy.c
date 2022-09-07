@@ -183,8 +183,8 @@ void unassign(head_t *block)
 {
     block->used = 0;
 
-    if (should_merge(block))
-        merge(block);
+    while (should_merge(block))
+        block = merge(block);
 
     return;
 }
