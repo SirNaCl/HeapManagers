@@ -38,12 +38,13 @@ head_t *new_block()
     */
 
     long int mask = 0xfffff << LEVELS + MINEXP - 1;
-    long int current = sbrk(0);
+    long int current = (long int)sbrk(0);
     long int root_pos = current + (1 << (LEVELS + MINEXP)); // todo kanske ta bort
     root_pos &= mask;
     long int buff_amount = root_pos - current;
+    long int alloc_amount = BLOCKSIZE + buff_amount;
 
-    long int adr = (long int)sbrk(BLOCKSIZE + buff_amount); // Allocate largest block plus alignment buffer
+    long int adr = (long int)sbrk(alloc_amount); // Allocate largest block plus alignment buffer
     //  long int mask = ~((0x1 << (LEVELS + MINEXP)) - 1);
     //  long int mask = 0xfffff << (LEVELS + MINEXP - 1);
     // long int mask = ~0 - ((1 << (LEVELS + MINEXP - 1)) - 1); // kanske -1 efter förflyttning
