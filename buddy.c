@@ -42,6 +42,8 @@ head_t *new_block()
     long int mask = 0xfffff << LEVELS + MINEXP;
     long int current = (long int)sbrk(0);
     long int root_pos = (current + ~(current | mask) + 1);
+    long int trash = sbrk(~(current | mask));
+
     // current + (1 << (LEVELS + MINEXP)); // todo kanske ta bort
     // root_pos &= mask;
     // long int buff_amount = root_pos - current;
