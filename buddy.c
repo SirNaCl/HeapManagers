@@ -25,37 +25,10 @@ head_t *root = NULL;
 // Generate a new block that can be used as root
 head_t *new_block()
 {
-
-    /*
-    long int adr = (long int)sbrk(BLOCKSIZE << 1); // Allocate largest block plus alignment buffer
-    long int mask = 0xfffff << LEVELS + MINEXP - 1;
-    //  long int mask = ~((0x1 << (LEVELS + MINEXP)) - 1);
-    //  long int mask = 0xfffff << (LEVELS + MINEXP - 1);
-    // long int mask = ~0 - ((1 << (LEVELS + MINEXP - 1)) - 1); // kanske -1 efter förflyttning
-
-    adr += 1 << (LEVELS + MINEXP); // todo kanske ta bort
-    adr &= mask;                   // Align address using mask
-    */
-
-    // p /t ~(current | mask)
-    // p /t (current + ~(current | mask) + 1)
     long int mask = 0xfffff << LEVELS + MINEXP;
     long int current = (long int)sbrk(0);
-    // long int root_pos = (current + ~(current | mask) + 1);
     long int trash = (long int)sbrk(~(current | mask) + 1);
-
-    // current + (1 << (LEVELS + MINEXP)); // todo kanske ta bort
-    // root_pos &= mask;
-    // long int buff_amount = root_pos - current;
-    // long int alloc_amount = BLOCKSIZE + buff_amount;
-
     long int adr = (long int)sbrk(BLOCKSIZE << 1); // Allocate largest block plus alignment buffer
-    //  long int mask = ~((0x1 << (LEVELS + MINEXP)) - 1);
-    //  long int mask = 0xfffff << (LEVELS + MINEXP - 1);
-    // long int mask = ~0 - ((1 << (LEVELS + MINEXP - 1)) - 1); // kanske -1 efter förflyttning
-
-    // adr += 1 << (LEVELS + MINEXP); // Increase adr before mask to prevent leaving block
-    // adr &= mask;
 
     head_t *n = (head_t *)adr;
 
@@ -134,6 +107,7 @@ int req_lvl(int size)
     return lvl;
 }
 
+// FIXME: SUUUUUUPER SLOW
 head_t *find_free(int level)
 {
     long int mask = 0; // x1 << (MINEXP + level - 1);
@@ -145,7 +119,6 @@ head_t *find_free(int level)
             return block;
 
         block = (head_t *)((long int)root | mask);
-        // mask += 0x1 << (MINEXP + level); // FIXME DETTA ÄR FEL!!!!! Hoppar mellan att kolla på olika nivåer istället för samma nivå!!!!
         mask += 0x1 << (MINEXP + level - 1);
     }
     return NULL;
