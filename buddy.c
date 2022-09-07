@@ -110,7 +110,7 @@ int req_lvl(int size)
 // FIXME: SUUUUUUPER SLOW
 head_t *find_free(int level)
 {
-    long int mask = 0; // x1 << (MINEXP + level - 1);
+    long int mask = 0;
     head_t *block = root;
     while (mask < BLOCKSIZE)
     {
