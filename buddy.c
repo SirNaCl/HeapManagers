@@ -130,6 +130,7 @@ int req_lvl(int size)
         lvl += 1;
     }
 
+    assert(lvl < LEVELS);
     return lvl;
 }
 
@@ -236,7 +237,7 @@ void *realloc(void *ptr, size_t size)
         return NULL;
 
     // Move content to new block
-    memcpy(nb, ptr, (1 << (block->level + MINEXP - 1)) - HEAD_SIZE);
+    memcpy(nb, ptr, (1 << (block->level + MINEXP)) - HEAD_SIZE);
     free(ptr);
     return nb;
 }
