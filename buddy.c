@@ -212,7 +212,7 @@ void *realloc(void *ptr, size_t size)
         return NULL;
 
     // Move content to new block
-    memcpy(nb, ptr, (1 << (block->level + MINEXP)) - 1);
+    memcpy(nb, ptr, 1 << (block->level + MINEXP));
     free(ptr);
     return nb;
 }
