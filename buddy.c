@@ -5,7 +5,7 @@
 #include <sys/mman.h>
 
 #define MINEXP 5 // Smallest possible block = 2^MINEXP
-#define LEVELS 20
+#define LEVELS 25
 #define MAGIC 123456789
 #define BLOCKSIZE 1 << (LEVELS + MINEXP - 1) // Largest possible block = 2^(MINEXP+LEVELS-1)
 #define ALIGN(size) (((size) + (BLOCKSIZE - 1)) & ~(BLOCKSIZE - 1))
@@ -26,12 +26,11 @@ head_t *root = NULL;
 head_t *new_block()
 {
 
-    long int aligned = ALIGN(BLOCKSIZE);           // Get the next free aligned address (ends with enough zeroes)
     long int adr = (long int)sbrk(BLOCKSIZE << 1); // Allocate largest block plus alignment buffer
-    // long int mask = 0xfffff<< LEVELS + MINEXP - 1;
+    long int mask = 0xfffff << LEVELS + MINEXP - 1;
     // long int mask = ~((0x1 << (LEVELS + MINEXP)) - 1);
     // long int mask = 0xfffff << (LEVELS + MINEXP - 1);
-    long int mask = ~0 - ((1 << (LEVELS + MINEXP - 1)) - 1);
+    // long int mask = ~0 - ((1 << (LEVELS + MINEXP - 1)) - 1);
 
     // Get next aligned address and allocate the difference between current break and that address
     /*
@@ -40,8 +39,8 @@ head_t *new_block()
     long int adr = sbrk(aligned - current_break);
     long int mask = ~0 - ((1 << (LEVELS + MINEXP - 1)) - 1);
     */
-    adr += aligned;
-    adr &= mask; // Align address using mask
+    adr += 1 << (LEVELS + MINEXP; // todo kanske ta bort
+    adr &= mask;    // Align address using mask
 
     head_t *n = (head_t *)adr;
 
