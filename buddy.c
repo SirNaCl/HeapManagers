@@ -5,7 +5,7 @@
 #include <sys/mman.h>
 
 #define MINEXP 5 // Smallest possible block = 2^MINEXP
-#define LEVELS 25
+#define LEVELS 15
 #define MAGIC 123456789
 #define BLOCKSIZE 1 << (LEVELS + MINEXP - 1) // Largest possible block = 2^(MINEXP+LEVELS-1)
 #define ALIGN(size) (((size) + (BLOCKSIZE - 1)) & ~(BLOCKSIZE - 1))
@@ -72,6 +72,7 @@ head_t *new_block()
 // Returns the address to the given block's buddy
 head_t *get_buddy(head_t *block)
 {
+    assert(block->magic = MAGIC);
     int index = block->level;
     // Shift the one to wanted position,
     // the mask adds / subtracts the memory address by the block's size by toggling the given bit
