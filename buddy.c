@@ -111,7 +111,7 @@ int req_lvl(int size)
 
 head_t *find_free(int level)
 {
-    long int mask = 0x1 << (MINEXP + level);
+    long int mask = 0x1 << (MINEXP + level - 1);
     head_t *block = root;
     while (mask < BLOCKSIZE)
     {
@@ -121,7 +121,7 @@ head_t *find_free(int level)
 
         block = (head_t *)((long int)root | mask);
         // mask += 0x1 << (MINEXP + level); // FIXME DETTA ÄR FEL!!!!! Hoppar mellan att kolla på olika nivåer istället för samma nivå!!!!
-        mask += 0x1 << (MINEXP + level + 1);
+        mask += 0x1 << (MINEXP + level);
     }
     return NULL;
 }
