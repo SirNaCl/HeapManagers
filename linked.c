@@ -73,7 +73,7 @@ block_head_t *find_free(size_t size)
         }
 
         // Break on last block so it can be used in grow
-        if (!block->next) 
+        if (!block->next)
             break;
 
         block = block->next;
@@ -147,7 +147,6 @@ void *realloc(void *ptr, size_t size)
     // return (claim_and_split(block, size) + 1);
 
     // Find new block if increasing size
-    // TODO: Check if block can expand
 
     // Allocate new block
     void *nb = malloc(size);
