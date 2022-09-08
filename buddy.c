@@ -8,7 +8,6 @@
 #define LEVELS 22
 #define MAGIC 123456789
 #define BLOCKSIZE 1 << (LEVELS + MINEXP - 1) // Largest possible block = 2^(MINEXP+LEVELS-1)
-#define ALIGN(size) (((size) + (BLOCKSIZE - 1)) & ~(BLOCKSIZE - 1))
 
 typedef struct head_t head_t;
 
@@ -27,14 +26,16 @@ head_t *new_block()
 {
     long int mask = 0xfffff << LEVELS + MINEXP;
     long int current = (long int)sbrk(0);
-    long int trash = (long int)sbrk(~(current | mask) + 1);
-    long int adr = (long int)sbrk(BLOCKSIZE << 1); // Allocate largest block plus alignment buffer
+    long int trash = (long int)sbrk(~(current | mask) + 1); // Move break to next aligned address
+    long int adr = (long int)sbrk(BLOCKSIZE << 1);          // Allocate largest block plus alignment buffer
 
     head_t *n = (head_t *)adr;
 
+    // Allocation failed
     if (!n)
         return NULL;
 
+    // Make sure address i properly aligned (enough zeroes at end of address)
     assert(((long int)n & (BLOCKSIZE - 1)) == 0);
     n->level = LEVELS - 1; // Set size of block to largest possible
     n->magic = MAGIC;
@@ -49,7 +50,7 @@ head_t *get_buddy(head_t *block)
     int index = block->level;
     // Shift the one to wanted position,
     // the mask adds / subtracts the memory address by the block's size by toggling the given bit
-    long int adr_mask = 0x1 << (index + MINEXP);
+    long int adr_mask = 0x1 << (index + MINEXP); // Create mask that can be used to toggle bit of right lvl
     return (struct head_t *)((long int)block ^ adr_mask);
 }
 
@@ -73,9 +74,10 @@ head_t *split(head_t *block)
 head_t *merge(head_t *block)
 {
     long int mask = 0xffffffffffffff << (1 + block->level + MINEXP);
+    // The block of the buddy pair with lower memory (primary) can expand over the other one
     head_t *primary = (head_t *)((long int)block & mask);
     head_t *b = get_buddy(primary);
-    b->magic = 0; // Invalidate block
+    b->magic = 0; // Invalidate buddy
     primary->level++;
     return primary;
 }
@@ -139,6 +141,7 @@ head_t *get_block(int level)
         block = find_free(level + split_count);
     }
 
+    // Split block into correct level if needed
     while (block && split_count-- > 0)
         block = split(block);
 
@@ -151,9 +154,7 @@ head_t *get_block(int level)
 int should_merge(head_t *block)
 {
     if (block->level >= LEVELS)
-    {
         return 0;
-    }
 
     head_t *b = get_buddy(block);
 
