@@ -33,7 +33,7 @@ void insert_free(head_t *b)
 
 void remove_free(head_t *b)
 {
-    head_t *prev;
+    head_t *prev = NULL;
     head_t *next = free_blocks[b->level];
 
     while (next && next != b)
