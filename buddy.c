@@ -99,12 +99,7 @@ head_t *split(head_t *block)
     block->level -= 1;
     insert_free(block);
 
-    // TODO: use get_buddy
-    int index = block->level;
-    long int mask = 0x1 << (index + MINEXP);
-    head_t *b = (head_t *)((long int)block | mask);
-
-    // head_t *b = get_buddy(block);
+    head_t *b = get_buddy(block);
     b->level = block->level;
     b->magic = MAGIC;
     b->used = 0;
