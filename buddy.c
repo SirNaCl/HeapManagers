@@ -16,10 +16,44 @@ struct head_t
     int used;  // 0 = free
     int level; // 0 smallest possible block, LEVELS = largest possible block
     int magic;
+    head_t *next;
 };
 #define HEAD_SIZE sizeof(head_t)
 
 head_t *root = NULL;
+// free blocks at a given level (sublists works as stacks)
+head_t *free_blocks[LEVELS - 1] = {NULL};
+
+void insert_free(head_t *b)
+{
+    assert(!b->used);
+    b->next = free_blocks[b->level];
+    free_blocks[b->level] = b;
+}
+
+void remove_free(head_t *b)
+{
+    head_t *prev;
+    head_t *next = free_blocks[b->level];
+
+    while (next && next != b)
+    {
+        prev = next;
+        next = next->next;
+    }
+
+    // next == b
+    if (next)
+    {
+        // not first iteration
+        if (prev)
+            prev->next = next->next;
+        else
+            free_blocks[b->level] = next->next;
+    }
+
+    // Never found b, throw error?
+}
 
 // Generate a new block that can be used as root
 head_t *new_block()
@@ -40,6 +74,7 @@ head_t *new_block()
     n->level = LEVELS - 1; // Set size of block to largest possible
     n->magic = MAGIC;
     n->used = 0;
+    insert_free(n);
     return n;
 }
 
@@ -58,7 +93,11 @@ head_t *get_buddy(head_t *block)
 head_t *split(head_t *block)
 {
     assert(block->level > 0);
+
+    // move the block between free levels
+    remove_free(block);
     block->level -= 1;
+    insert_free(block);
 
     int index = block->level;
     long int mask = 0x1 << (index + MINEXP);
@@ -68,6 +107,7 @@ head_t *split(head_t *block)
     b->level = block->level;
     b->magic = MAGIC;
     b->used = 0;
+
     return b;
 }
 
@@ -109,21 +149,13 @@ int req_lvl(int size)
     return lvl;
 }
 
-// FIXME: SUUUUUUPER SLOW
 head_t *find_free(int level)
 {
-    long int mask = 0;
-    head_t *block = root;
-    while (mask < BLOCKSIZE)
-    {
-        // Check if there is a valid block at address
-        if (block->magic == MAGIC && !block->used && block->level == level)
-            return block;
+    head_t *b;
+    if ((b = free_blocks[level]))
+        free_blocks[level] = b->next;
 
-        block = (head_t *)((long int)root | mask);
-        mask += 0x1 << (MINEXP + level - 1);
-    }
-    return NULL;
+    return b;
 }
 
 head_t *get_block(int level)
