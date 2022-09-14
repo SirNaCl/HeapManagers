@@ -21,27 +21,23 @@ struct block_head_t
 block_head_t *root = NULL;
 
 // Increase the heap with given size and return block header
-// last_free = last free head in linked list
-block_head_t *grow_heap(block_head_t *last_free, size_t size)
+// last_block = last head in linked list
+block_head_t *grow_heap(block_head_t *last_block, size_t size)
 {
-    block_head_t *new_head = sbrk(0); /*Assign new head's address att current heap break*/
-    void *block_end = sbrk(size + HEADSIZE);
+    block_head_t *new_head = sbrk(size + HEADSIZE); /*Assign new head's address att current heap break*/
 
     // return NULL if allocation failed
-    if (block_end == (void *)-1)
-    {
+    if ((void *)new_head == (void *)-1)
         return NULL;
-    }
 
+    new_head = new_head;
     new_head->size = size;
     new_head->free = 0;
     new_head->next = NULL;
 
     // Assign new break as next free address
-    if (last_free)
-    {
-        last_free->next = new_head;
-    }
+    if (last_block)
+        last_block->next = new_head;
 
     return new_head;
 }
@@ -133,18 +129,16 @@ void *realloc(void *ptr, size_t size)
     if (!ptr)
         return malloc(size);
 
+    if (size == 0)
+        free(ptr);
+
     // Get the head for the block at ptr
     block_head_t *block = (block_head_t *)ptr - 1;
     assert(block->free == 0); // The block should not be free
 
-    // No changes if size is the same
-    if (NORMALIZE(size) == block->size)
+    // No changes if size is the same or smaller
+    if (NORMALIZE(size) <= block->size)
         return ptr;
-
-    // Reduce size
-    if (size < block->size)
-        return ptr;
-    // return (claim_and_split(block, size) + 1);
 
     // Find new block if increasing size
 
